@@ -46,9 +46,19 @@ def extract_audio(video_path: Path, work_dir: Path) -> Path:
 
 def transcribe(audio_path: Path, model_size: str = "base") -> Transcript:
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
-    segments_iter, info = model.transcribe(str(audio_path), vad_filter=True)
-    segments = [
-        Segment(start=seg.start, end=seg.end, text=seg.text.strip())
-        for seg in segments_iter
-    ]
-    return Transcript(language=info.language, segments=segments)
+
+    # VAD removes silence but can over-filter music/short clips (and then language
+    # detection raises). Fall back to a plain transcribe when that happens.
+    for vad in (True, False):
+        try:
+            segments_iter, info = model.transcribe(str(audio_path), vad_filter=vad)
+            segments = [
+                Segment(start=seg.start, end=seg.end, text=seg.text.strip())
+                for seg in segments_iter
+            ]
+        except ValueError:
+            continue
+        if segments:
+            return Transcript(language=info.language, segments=segments)
+
+    return Transcript(language="unknown", segments=[])

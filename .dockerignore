@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+work/
+downloads/
+output/
+models/
+*.log
+.git/
+cookies.txt

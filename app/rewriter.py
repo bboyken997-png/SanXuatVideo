@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import difflib
+import re
 
 from .config import Config
 
@@ -62,12 +63,16 @@ def _rewrite_anthropic(cfg: Config, prompt: str) -> str:
 
 def _rewrite_naive(text: str) -> str:
     """Offline fallback: light shuffling so there is *some* difference. Low quality."""
-    sentences = [s.strip() for s in text.replace("\n", " ").split(".") if s.strip()]
-    if len(sentences) <= 1:
-        return text
-    mid = len(sentences) // 2
-    reordered = sentences[mid:] + sentences[:mid]
-    return ". ".join(reordered) + "."
+    chunks = [c.strip() for c in re.split(r"[.!?\n,]+", text) if c.strip()]
+    if len(chunks) <= 1:
+        # No punctuation to split on (e.g. song lyrics): reorder word halves.
+        words = text.split()
+        if len(words) <= 1:
+            return text
+        mid = len(words) // 2
+        return " ".join(words[mid:] + words[:mid])
+    mid = len(chunks) // 2
+    return ". ".join(chunks[mid:] + chunks[:mid]) + "."
 
 
 def rewrite(cfg: Config, text: str) -> tuple[str, float]:

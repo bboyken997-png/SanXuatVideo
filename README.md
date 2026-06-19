@@ -26,9 +26,16 @@ YouTube URL
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-sudo apt-get install -y ffmpeg   # required
-cp .env.example .env             # then fill in the values
+sudo apt-get install -y ffmpeg          # required
+curl -fsSL https://deno.land/install.sh | sh   # JS runtime for yt-dlp (see below)
+cp .env.example .env                    # then fill in the values
 ```
+
+> **deno is required.** YouTube now serves video formats behind a JavaScript
+> signature/n-sig challenge; yt-dlp solves it with a JS runtime (deno). Without it
+> downloads return only image storyboards and fail. The bot passes
+> `--remote-components ejs:github` so yt-dlp fetches the solver script on first use.
+> Make sure `deno` is on `PATH` when running the bot.
 
 ### Required environment variables
 
@@ -48,6 +55,10 @@ python -m app.bot
 ```
 
 Then message your bot a YouTube link.
+
+## Deploy 24/7
+
+See [DEPLOY.md](DEPLOY.md) for Docker Compose, systemd, and quick-run instructions.
 
 ## Notes
 
