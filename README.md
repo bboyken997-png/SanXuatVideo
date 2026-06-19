@@ -49,6 +49,10 @@ python -m app.bot
 
 Then message your bot a YouTube link.
 
+## Deploy 24/7
+
+See [DEPLOY.md](DEPLOY.md) for Docker Compose, systemd, and quick-run instructions.
+
 ## Notes
 
 - The rewrite difference percentage is measured on the transcript text and reported in

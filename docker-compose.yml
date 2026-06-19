@@ -1,0 +1,14 @@
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # Persist whisper model downloads between restarts.
+      - whisper-cache:/app/.cache
+      # Mount your exported YouTube cookies (set YT_COOKIES_FILE=/secrets/cookies.txt).
+      - ./cookies.txt:/secrets/cookies.txt:ro
+
+volumes:
+  whisper-cache:
