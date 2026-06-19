@@ -46,7 +46,9 @@ cache model Whisper giữa các lần khởi động.
 ## Cách 2 — systemd (chạy trực tiếp trên VPS, không Docker)
 
 ```bash
-sudo apt-get update && sudo apt-get install -y python3-venv ffmpeg git
+sudo apt-get update && sudo apt-get install -y python3-venv ffmpeg git curl unzip
+# deno: JS runtime yt-dlp needs to solve YouTube's signature challenge
+curl -fsSL https://deno.land/install.sh | DENO_INSTALL=/usr/local sudo -E sh
 git clone https://github.com/bboyken997-png/SanXuatVideo /opt/sanxuatvideo
 cd /opt/sanxuatvideo
 python3 -m venv .venv

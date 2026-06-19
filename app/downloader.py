@@ -59,12 +59,14 @@ def download(url: str, work_dir: Path, cfg: Config | None = None) -> DownloadRes
     work_dir.mkdir(parents=True, exist_ok=True)
     outtmpl = str(work_dir / "source.%(ext)s")
     opts = {
-        "format": "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
+        "format": "bv*[height<=1080]+ba/b[height<=1080]/bv*+ba/b",
         "merge_output_format": "mp4",
         "outtmpl": outtmpl,
         "quiet": True,
         "no_warnings": True,
         "noplaylist": True,
+        # Download YouTube's JS challenge solver so signature/n-sig formats resolve.
+        "remote_components": ["ejs:github"],
     }
     opts.update(_cookie_opts(cfg))
     with yt_dlp.YoutubeDL(opts) as ydl:
