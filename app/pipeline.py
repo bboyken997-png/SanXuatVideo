@@ -56,6 +56,7 @@ def run(cfg: Config, url: str, progress: ProgressCb | None = None) -> PipelineRe
         narration_audio=narration_path,
         out_path=output_path,
         subtitle_path=srt_path,
+        subtitle_font_size=cfg.subtitle_font_size,
     )
 
     return PipelineResult(

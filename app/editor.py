@@ -33,6 +33,7 @@ def rebuild_video(
     out_path: Path,
     subtitle_path: Path | None = None,
     flip: bool = True,
+    subtitle_font_size: int = 14,
 ) -> Path:
     """Mux new narration over the (visually altered) source video.
 
@@ -40,6 +41,10 @@ def rebuild_video(
     shorter than the narration and trimmed if longer. Visual filters (horizontal flip,
     mild contrast/saturation boost, optional burned-in subtitles) increase the visual
     difference from the original.
+
+    Subtitles are styled in libass' default 384x288 script space, so
+    ``subtitle_font_size`` stays consistent regardless of the video resolution
+    (~font_size/288 of the frame height).
     """
     target_duration = _ffprobe_duration(narration_audio)
 
@@ -48,7 +53,12 @@ def rebuild_video(
         vf_parts.append("hflip")
     vf_parts.append("eq=contrast=1.06:saturation=1.12:brightness=0.02")
     if subtitle_path is not None and subtitle_path.exists():
-        vf_parts.append(f"subtitles='{_escape_subtitles(subtitle_path)}'")
+        style = (
+            f"Fontsize={subtitle_font_size},Outline=1,Shadow=0,"
+            "MarginV=18,MarginL=24,MarginR=24,Alignment=2"
+        )
+        sub = _escape_subtitles(subtitle_path)
+        vf_parts.append(f"subtitles='{sub}':force_style='{style}'")
     vf = ",".join(vf_parts)
 
     cmd = [
