@@ -29,6 +29,7 @@ class Config:
     anthropic_model: str
     whisper_model: str
     tts_voice: str
+    subtitle_font_size: int
     target_diff_ratio: float
     max_duration_seconds: int
     yt_cookies_file: str
@@ -53,6 +54,7 @@ class Config:
             ).strip(),
             whisper_model=os.environ.get("WHISPER_MODEL", "base").strip(),
             tts_voice=os.environ.get("TTS_VOICE", "vi-VN-HoaiMyNeural").strip(),
+            subtitle_font_size=int(os.environ.get("SUBTITLE_FONT_SIZE", "14")),
             target_diff_ratio=float(os.environ.get("TARGET_DIFF_RATIO", "0.40")),
             max_duration_seconds=int(os.environ.get("MAX_DURATION_SECONDS", "900")),
             yt_cookies_file=os.environ.get("YT_COOKIES_FILE", "").strip(),
